@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">News App</string>
+    <string name="loading">loading....</string>
+    <string name="loading_error">No internet conection</string>
+</resources>
