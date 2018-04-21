@@ -19,20 +19,24 @@ import java.util.List;
 
 class NewsLoader extends AsyncTaskLoader<List<News>> {
     private static final String TAG = "NewsLoader";
+    List<News> newsFeed = new ArrayList<>();
     private String searchQuery;
+    private int page;
 
-    NewsLoader(Context context, String searchQuery) {
+
+    NewsLoader(Context context, String searchQuery, int page) {
         super(context);
         this.searchQuery = searchQuery;
+        this.page = page;
     }
+
 
     @Override
     public List<News> loadInBackground() {
-        List<News> newsFeed = new ArrayList<>();
         HttpURLConnection urlConnection;
         InputStream inputStream;
         try {
-            urlConnection = (HttpURLConnection) Contract.getUrl(searchQuery).openConnection();
+            urlConnection = (HttpURLConnection) Contract.getUrl(searchQuery, page).openConnection();
             urlConnection.setReadTimeout(10000 /* milliseconds */);
             urlConnection.setConnectTimeout(15000 /* milliseconds */);
             urlConnection.setRequestMethod("GET");
@@ -57,7 +61,13 @@ class NewsLoader extends AsyncTaskLoader<List<News>> {
                     String date = currentNews.getString("webPublicationDate");
                     String title = currentNews.getString("webTitle");
                     String webUrl = currentNews.getString("webUrl");
-                    newsFeed.add(new News(title, section, date, webUrl));
+                    JSONArray tags = currentNews.getJSONArray("tags");
+                    String authorName = "";
+                    if (tags.length() > 0) {
+                        JSONObject author = tags.getJSONObject(0);
+                        authorName = author.getString("webTitle");
+                    }
+                    newsFeed.add(new News(title, section, date, webUrl, authorName));
                 }
             }
 

@@ -20,16 +20,34 @@ public class Adapter extends ArrayAdapter<News> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-
+        ViewHolder holder;
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.story_item, parent, false);
+            holder = new ViewHolder(convertView);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
+
         }
-        TextView title = convertView.findViewById(R.id.title_text_view);
-        TextView section = convertView.findViewById(R.id.section_text_view);
-        TextView date = convertView.findViewById(R.id.date_text_view);
-        title.setText(getItem(position).getTitle());
-        section.setText(getItem(position).getSection());
-        date.setText(getItem(position).getDate());
+        holder.title.setText(getItem(position).getTitle());
+        holder.section.setText(getItem(position).getSection());
+        holder.date.setText(getItem(position).getDate());
+        holder.author.setText(getItem(position).getAuthor());
         return convertView;
+    }
+
+    class ViewHolder {
+        private TextView title;
+        private TextView section;
+        private TextView date;
+        private TextView author;
+
+        public ViewHolder(View view) {
+            this.title = view.findViewById(R.id.title_text_view);
+            this.section = view.findViewById(R.id.section_text_view);
+            this.date = view.findViewById(R.id.date_text_view);
+            this.author = view.findViewById(R.id.author_text_view);
+
+        }
     }
 }
